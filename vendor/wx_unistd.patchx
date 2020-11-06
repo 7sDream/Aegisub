@@ -1,0 +1,36 @@
+diff --git a/src/zlib/gzlib.c b/src/zlib/gzlib.c
+index fae202ef89..8c0c436c0c 100644
+--- a/src/zlib/gzlib.c
++++ b/src/zlib/gzlib.c
+@@ -11,6 +11,7 @@
+ #if defined(_LARGEFILE64_SOURCE) && _LFS64_LARGEFILE-0
+ #  define LSEEK lseek64
+ #else
++#  include <unistd.h>
+ #  define LSEEK lseek
+ #endif
+ #endif
+diff --git a/src/zlib/gzread.c b/src/zlib/gzread.c
+index bf4538eb27..351702f9ba 100644
+--- a/src/zlib/gzread.c
++++ b/src/zlib/gzread.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include "gzguts.h"
++#include <unistd.h>
+ 
+ /* Local functions */
+ local int gz_load OF((gz_statep, unsigned char *, unsigned, unsigned *));
+diff --git a/src/zlib/gzwrite.c b/src/zlib/gzwrite.c
+index aa767fbf63..69bd396dca 100644
+--- a/src/zlib/gzwrite.c
++++ b/src/zlib/gzwrite.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include "gzguts.h"
++#include <unistd.h>
+ 
+ /* Local functions */
+ local int gz_init OF((gz_statep));

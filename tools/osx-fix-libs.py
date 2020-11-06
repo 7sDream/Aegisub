@@ -40,11 +40,14 @@ def collectlibs(lib, masterlist, targetdir):
 				if os.path.isfile(check) and not os.path.islink(check):
 					os.system("cp '%s' '%s'" % (check, targetdir))
 					print "    FILE %s ... copied to target" % check
+					targetfile = os.path.join(targetdir, os.path.basename(check))
+					os.system("chmod 755 '%s'" % targetfile)
+					print "    FILE %s ... set permission" % check
 					if link_list:
 						for link in link_list:
 							link_map[link] = os.path.basename(check)
 					break
-					
+
 				if os.path.islink(check):
 					print "    LINK %s" % check
 					link_list.append(os.path.basename(check))
@@ -85,6 +88,7 @@ for lib in libs:
 
 	if libbase in link_map:
 		libbase = link_map[libbase]
+		os.system("ln -s './%s' '%s/%s'" % (libbase, targetdir, os.path.basename(lib)))
 		print "%s -> @executable_path/%s (REMAPPED)" % (lib, libbase)
 	else:
 		print "%s -> @executable_path/%s" % (lib, libbase)

@@ -1,0 +1,42 @@
+name: OSX Build
+
+on:
+  push:
+    branches: [ osx-build ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install tree autoconf automake libtool
+        brew install ffmpeg freetype gettext ffms2 fftw fribidi libass m4 luajit icu4c
+        brew link --force gettext
+        brew install boost
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Update wxWidgets submodule
+      run: git submodule update --init -- vendor/wxWidgets
+    - name: Build wxWidgets
+      run: ./vendor/osx_build_wx_widgets.sh
+    - name: Autoconf
+      run: autoreconf
+    - name: Configure
+      run: |
+        export LDFLAGS="-L$(brew --prefix icu4c)/lib"
+        export CPPFLAGS="-I$(brew --prefix icu4c)/include"
+        export PKG_CONFIG_PATH="$(brew --prefix icu4c)/lib/pkgconfig"
+        ./configure --with-boost=$(brew --prefix boost) --with-wxdir=vendor/wxWidgets
+    - name: Make
+      run: make -j4
+    - name: Make DMG
+      run: make osx-dmg
+    - name: Upload to artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Aegisub
+        path: Aegisub-*-osx-build-*.dmg
