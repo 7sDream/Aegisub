@@ -30,7 +30,7 @@ jobs:
         export LDFLAGS="-L$(brew --prefix icu4c)/lib"
         export CPPFLAGS="-I$(brew --prefix icu4c)/include"
         export PKG_CONFIG_PATH="$(brew --prefix icu4c)/lib/pkgconfig"
-        ./configure --with-boost=$(brew --prefix boost) --with-wxdir=vendor/wxWidgets
+        ./configure --with-boost=$(brew --prefix boost) --with-boost-system=boost_system-mt --with-boost-filesystem=boost_filesystem-mt --with-wxdir=vendor/wxWidgets
     - name: Make
       run: make -j4
     - name: Make DMG
